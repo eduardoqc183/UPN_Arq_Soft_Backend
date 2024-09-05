@@ -1,0 +1,1 @@
+﻿--dotnet ef dbcontext scaffold --use-database-names --context JorplastContext "Server=localhost;Database=Jorplast_UPN;Trusted_Connection=true;TrustServerCertificate=True;MultipleActiveResultSets=true;" Microsoft.EntityFrameworkCore.SqlServer -o Models

@@ -1,0 +1,6 @@
+@UPN_Arq_Soft_Backend_HostAddress = http://localhost:5096
+
+GET {{UPN_Arq_Soft_Backend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
