@@ -1,6 +1,7 @@
 using Dto.Model.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Service.Command.Producto;
 using Service.Query.Producto;
 
 namespace UPN_Arq_Soft_Backend.Controllers
@@ -26,6 +27,21 @@ namespace UPN_Arq_Soft_Backend.Controllers
             {
                 var data = new ObtenerProductosQuery(nombreProducto, marca, precioMin, precioMax);
                 var res = await mediator.Send(data);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return OnError(ex);
+            }
+        }
+
+        [HttpGet("InsertarProducto")]
+        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        public async Task<ActionResult> InsertarProducto(InsertarProductoCommand cmd)
+        {
+            try
+            {
+                var res = await mediator.Send(cmd);
                 return Ok(res);
             }
             catch (Exception ex)

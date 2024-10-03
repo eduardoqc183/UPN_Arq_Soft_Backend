@@ -2,28 +2,28 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Service.Command.Usuario;
+using Service.Command.Carrito;
+using Service.Query.Carrito;
 using Service.Query.Producto;
-using Service.Query.Usuario;
-using System.ComponentModel.DataAnnotations;
 
 namespace UPN_Arq_Soft_Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsuarioController : CustomControllerBase
+    public class CarritoController : CustomControllerBase
     {
+        private readonly ILogger<CarritoController> _logger;
         private readonly IMediator mediator;
 
-        public UsuarioController(ILogger<UsuarioController> logger, IMediator mediator)
+        public CarritoController(ILogger<CarritoController> logger, IMediator mediator)
         {
+            _logger = logger;
             this.mediator = mediator;
         }
 
-
-        [HttpPost("AutenticarUsuario")]
-        [ProducesResponseType(typeof(usuarioDto), StatusCodes.Status200OK)]
-        public async Task<ActionResult> AutenticarUsuario(AutenticarUsuarioCommand cmd)
+        [HttpPost("RegistrarACarrito")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        public async Task<ActionResult> ObtenerProductos(RegistrarACarritoCommand cmd)
         {
             try
             {
@@ -36,9 +36,9 @@ namespace UPN_Arq_Soft_Backend.Controllers
             }
         }
 
-        [HttpPost("RegistrarUsuario")]
+        [HttpPost("EliminarDeCarrito")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
-        public async Task<ActionResult> RegistrarUsuario(RegistrarUsuarioCommand cmd)
+        public async Task<ActionResult> EliminarDeCarritoEvento(EliminarDeCarritoCommand cmd)
         {
             try
             {
@@ -51,13 +51,13 @@ namespace UPN_Arq_Soft_Backend.Controllers
             }
         }
 
-        [HttpGet("ValidarEmailRegistrado")]
-        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
-        public async Task<ActionResult> ValidarEmailRegistrado([EmailAddress][Required(AllowEmptyStrings = false)] string email)
+        [HttpGet("ObtenerCarrito")]
+        [ProducesResponseType(typeof(List<carritoconsultaDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult> ObtenerCarrito(int userid)
         {
             try
             {
-                var res = await mediator.Send(new ValidarEmailRegistradoQuery(email));
+                var res = await mediator.Send(new ObtenerCarritoQuery(userid));
                 return Ok(res);
             }
             catch (Exception ex)

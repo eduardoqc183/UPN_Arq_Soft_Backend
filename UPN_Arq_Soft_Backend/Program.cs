@@ -1,3 +1,4 @@
+using Dto.Model.Dtos;
 using Dto.Model.MemoryDb;
 using MediatR;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -31,6 +32,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(Assembly.Load("Service.Command"));
 builder.Services.AddMediatR(Assembly.Load("Service.Query"));
 builder.Services.AddSingleton<ProductDictionary>();
+builder.Services.AddSingleton<CarritoDictionary>();
 
 builder.Services.AddDbContext<JorplastContext>(options =>
 #if DEBUG
@@ -61,8 +63,22 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<JorplastContext>();
     var productDictionary = scope.ServiceProvider.GetRequiredService<ProductDictionary>();
+    var carritoDictionary = scope.ServiceProvider.GetRequiredService<CarritoDictionary>();
     var products = dbContext.productos.ToList();
+    var carritos = dbContext.carritocompras
+        .Include(i => i.producto)
+        .Select(s => new carritoconsultaDto
+        {
+            CarritoId = s.carritocompraid,
+            Cantidad = s.cantidad,
+            Completado = s.completado,
+            FechaRegistro = s.fecharegistro,
+            UsuarioId = s.usuarioid,
+            Producto = s.producto.codigoproducto + " " + s.producto.nombre,
+            Precio = s.producto.preciosinigv
+        });
     productDictionary.LoadProducts(products.ToDTOs());
+    carritoDictionary.LoadProducts(carritos);
 }
 
 

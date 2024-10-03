@@ -28,13 +28,8 @@ public partial class JorplastContext : DbContext
     public virtual DbSet<usuario> usuarios { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#if DEBUG
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Server=localhost;Database=Jorplast_UPN;Trusted_Connection=true;TrustServerCertificate=True;MultipleActiveResultSets=true;");
-#endif
-
-#if !DEBUG
-    => optionsBuilder.UseSqlServer("Server=WIN-3Q9QIM3QCEC\\CSHARPDEV;Database=jorplast_upn;User Id=sa;Password=1tb4zqya!;TrustServerCertificate=True");
-#endif
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -48,7 +43,6 @@ public partial class JorplastContext : DbContext
 
             entity.HasIndex(e => e.pagoid, "IX_Relationship7");
 
-            entity.Property(e => e.carritocompraid).ValueGeneratedNever();
             entity.Property(e => e.fecharegistro).HasColumnType("datetime");
 
             entity.HasOne(d => d.pago).WithMany(p => p.carritocompras)

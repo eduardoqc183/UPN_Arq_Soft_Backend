@@ -1,5 +1,6 @@
 ﻿using Common.Exceptions;
 using Common.Utils;
+using Dto.Model.Dtos;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistencia.Models;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Service.Command.Usuario
 {
-    public class AutenticarUsuarioCommand : IRequest<bool>
+    public class AutenticarUsuarioCommand : IRequest<usuarioDto>
     {
         [EmailAddress]
         [Required(AllowEmptyStrings = false)]
@@ -23,7 +24,7 @@ namespace Service.Command.Usuario
         public string Password { get; set; }
     }
 
-    public class AutenticarUsuarioEventHandler : IRequestHandler<AutenticarUsuarioCommand, bool>
+    public class AutenticarUsuarioEventHandler : IRequestHandler<AutenticarUsuarioCommand, usuarioDto>
     {
         private readonly JorplastContext context;
 
@@ -32,11 +33,15 @@ namespace Service.Command.Usuario
             this.context = context;
         }
 
-        public async Task<bool> Handle(AutenticarUsuarioCommand request, CancellationToken cancellationToken)
+        public async Task<usuarioDto> Handle(AutenticarUsuarioCommand request, CancellationToken cancellationToken)
         {
             try
             {
-                var u = await this.context.usuarios.FirstOrDefaultAsync(w => w.email.ToLower().Equals(request.Email.ToLower()));
+                var u = await this.context.usuarios
+                    .Include(i => i.persona)
+                    .FirstOrDefaultAsync(w =>
+                        w.email.ToLower().Equals(request.Email.ToLower())
+                    );
 
                 if (u == null)
                 {
@@ -44,7 +49,15 @@ namespace Service.Command.Usuario
                 }
 
                 var verify = EncryptionHelper.VerifyPassword(request.Password, u.password);
-                return verify;
+                var res = new usuarioDto
+                {
+                    email = u.email,
+                    personaid = u.personaid,
+                    usuarioid = u.usuarioid,
+                    NombreCompleto = u.persona.nombres + " " + u.persona.apellidos
+                };
+
+                return res;
             }
             catch (Exception)
             {
