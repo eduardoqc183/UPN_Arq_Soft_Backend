@@ -92,14 +92,16 @@ public partial class JorplastContext : DbContext
         {
             entity.ToTable("pago");
 
-            entity.Property(e => e.pagoid).ValueGeneratedNever();
-            entity.Property(e => e.fecharegistro)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .IsFixedLength();
+            entity.HasIndex(e => e.usuarioid, "IX_Relationship1");
+
+            entity.Property(e => e.fecharegistro).HasColumnType("datetime");
             entity.Property(e => e.igv).HasColumnType("numeric(18, 2)");
             entity.Property(e => e.total).HasColumnType("numeric(18, 2)");
             entity.Property(e => e.valortotal).HasColumnType("numeric(18, 2)");
+
+            entity.HasOne(d => d.usuario).WithMany(p => p.pagos)
+                .HasForeignKey(d => d.usuarioid)
+                .HasConstraintName("Relationship1");
         });
 
         modelBuilder.Entity<persona>(entity =>

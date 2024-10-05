@@ -19,7 +19,11 @@ public partial class pago
 
     public decimal total { get; set; }
 
-    public string fecharegistro { get; set; } = null!;
+    public DateTime fecharegistro { get; set; }
+
+    public int? usuarioid { get; set; }
 
     public virtual ICollection<carritocompra> carritocompras { get; set; } = new List<carritocompra>();
+
+    public virtual usuario? usuario { get; set; }
 }

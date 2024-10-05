@@ -65,5 +65,50 @@ namespace UPN_Arq_Soft_Backend.Controllers
                 return OnError(ex);
             }
         }
+
+        [HttpPost("PagarCarrito")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        public async Task<ActionResult> PagarCarrito(PagarCarritoCommand cmd)
+        {
+            try
+            {
+                var res = await mediator.Send(cmd);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return OnError(ex);
+            }
+        }
+
+        [HttpGet("ObtenerComprados")]
+        [ProducesResponseType(typeof(List<carritoconsultaDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult> ObtenerComprados(int userid)
+        {
+            try
+            {
+                var res = await mediator.Send(new ObtenerCompradosQuery(userid));
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return OnError(ex);
+            }
+        }
+
+        [HttpGet("ObtenerPagos")]
+        [ProducesResponseType(typeof(List<pagoDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult> ObtenerPagos(int userid)
+        {
+            try
+            {
+                var res = await mediator.Send(new ObtenerPagosQuery(userid));
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return OnError(ex);
+            }
+        }
     }
 }

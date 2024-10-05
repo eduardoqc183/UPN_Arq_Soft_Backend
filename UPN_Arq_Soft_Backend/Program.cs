@@ -67,6 +67,7 @@ using (var scope = app.Services.CreateScope())
     var products = dbContext.productos.ToList();
     var carritos = dbContext.carritocompras
         .Include(i => i.producto)
+        .Where(w => !w.completado)
         .Select(s => new carritoconsultaDto
         {
             CarritoId = s.carritocompraid,

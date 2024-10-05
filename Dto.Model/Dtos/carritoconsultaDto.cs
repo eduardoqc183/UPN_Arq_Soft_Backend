@@ -15,5 +15,6 @@ namespace Dto.Model.Dtos
         public DateTime FechaRegistro { get; set; }
         public bool Completado { get; set; }
         public decimal Precio { get; set; }
+        public string FotoUrl { get; set; }
     }
 }

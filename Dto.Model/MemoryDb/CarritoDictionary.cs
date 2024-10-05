@@ -23,7 +23,8 @@ namespace Dto.Model.MemoryDb
 
         public void Delete(int productId)
         {
-            _carrito.Remove(productId);
+            if (_carrito.ContainsKey(productId))
+                _carrito.Remove(productId);
         }
     }
 }

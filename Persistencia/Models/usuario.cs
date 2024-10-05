@@ -17,5 +17,7 @@ public partial class usuario
 
     public virtual ICollection<carritocompra> carritocompras { get; set; } = new List<carritocompra>();
 
+    public virtual ICollection<pago> pagos { get; set; } = new List<pago>();
+
     public virtual persona persona { get; set; } = null!;
 }
